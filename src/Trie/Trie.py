@@ -17,16 +17,19 @@ class Trie:
     def findMinimal(self):
         pass
     
-    def printTree(self, indent=0):
-        print self.name, self.weight
+    def __str__(self, indent=0):
+        output = " " * indent + self.name + " " + str(self.weight) + "\n"
         for child in self.children:
-            print " " * indent, child.printTree(indent + 2)
+            output += child.__str__(indent + 2)
+        return output
 
     def getChild(self, name):
+        result = False
         for child in self.children:
             if child.name == name:
-                return child
-        return False
+                result = child
+                break
+        return result
         
 if __name__ == "__main__":
     trie = Trie()
@@ -35,4 +38,4 @@ if __name__ == "__main__":
     for url in urls:
         p = url.split("/")
         trie.insert(p[1:])
-    trie.printTree()
+    print trie.__str__()
