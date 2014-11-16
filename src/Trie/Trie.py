@@ -14,16 +14,18 @@ class Trie:
                 self.children.append(child)    
             child.insert(path[1:], value)
             
-    def findMinimal(self, minLevel=0):
+    def findMinimal(self, minLevel=0, prefix=""):
         minimals = []
-        if minLevel <= 0:
+        if minLevel == 0:
+            # minimal depth in tree reached
             if len(self.children) == 1:
-                map(minimals.append, self.children[0].findMinimal(minLevel))
+                map(minimals.append, self.children[0].findMinimal(minLevel, prefix + "/" + self.name))
             else:
-                minimals.append(self) 
-        else: 
+                minimals.append((prefix + "/" + self.name, self.weight)) 
+        else:
+            # go deeper into the tree
             for child in self.children:
-                map(minimals.append, child.findMinimal(minLevel - 1))
+                map(minimals.append, child.findMinimal(minLevel - 1, prefix + "/" + self.name))
         return minimals
             
     
@@ -48,10 +50,11 @@ if __name__ == "__main__":
     for url in urls:
         p = url.split("/")
         trie.insert(p[1:])
+    print "Prefix tree:"
     print trie.__str__()
     
     print "Minimal prefixes:"
     for prefix in trie.findMinimal(3):
-        print "'" + prefix.name + "'", prefix.weight 
+        print prefix[0], prefix[1] 
     
     
