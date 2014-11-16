@@ -14,11 +14,21 @@ class Trie:
                 self.children.append(child)    
             child.insert(path[1:], value)
             
-    def findMinimal(self):
-        pass
+    def findMinimal(self, minLevel=0):
+        minimals = []
+        if minLevel <= 0:
+            if len(self.children) == 1:
+                map(minimals.append, self.children[0].findMinimal(minLevel))
+            else:
+                minimals.append(self) 
+        else: 
+            for child in self.children:
+                map(minimals.append, child.findMinimal(minLevel - 1))
+        return minimals
+            
     
     def __str__(self, indent=0):
-        output = " " * indent + self.name + " " + str(self.weight) + "\n"
+        output = "  " * indent + "'" + self.name + "' " + str(self.weight) + "\n"
         for child in self.children:
             output += child.__str__(indent + 2)
         return output
@@ -33,9 +43,15 @@ class Trie:
         
 if __name__ == "__main__":
     trie = Trie()
-    urls = ("/Kooperationen/Microsoft/Windows-Server-2015-was-ist-neu", "/Kooperationen/Microsoft/Docker-kooperiert-mit-Microsoft", "/Kooperationen/Microsoft/Windows-Server-2015-was-ist-neu/(tagID)/8")
+    urls = ("/Kooperationen/Microsoft/Windows-Server-2015-was-ist-neu", "/Kooperationen/Microsoft/Docker-kooperiert-mit-Microsoft", "/Kooperationen/Microsoft/Windows-Server-2015-was-ist-neu/(tagID)/8", "/Kooperationen/Microsoft/Windows-Server-2015-was-ist-neu/(tagID)/7", "/Kooperationen/Microsoft/Open-Source-in-der-Microsoft-Azure-Cloud", "/Kooperationen/Microsoft/Open-Source-in-der-Microsoft-Azure-Cloud/(tagID)/8")
 
     for url in urls:
         p = url.split("/")
         trie.insert(p[1:])
     print trie.__str__()
+    
+    print "Minimal prefixes:"
+    for prefix in trie.findMinimal(3):
+        print "'" + prefix.name + "'", prefix.weight 
+    
+    
