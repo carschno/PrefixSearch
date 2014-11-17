@@ -4,10 +4,12 @@ Created on 17.11.2014
 @author: Carsten Schnober
 '''
 from UserDict import UserDict
+import re
 
-class PrefixMap(UserDict):
+
+class PrefixDict(UserDict):
     '''
-    Extends a dict.
+    Extends a dict to aggregate methods matching certain conditions.
     '''
         
     def getPrefixEntries(self, prefix):
@@ -15,5 +17,13 @@ class PrefixMap(UserDict):
         result = 0
         for key in self.data:
             if key.startswith(prefix):
+                result += self.data[key]
+        return result
+    
+    def getRegexEntries(self, pattern):
+        regex = re.compile(pattern)
+        result = 0
+        for key in self.data:
+            if regex.match(key):
                 result += self.data[key]
         return result
