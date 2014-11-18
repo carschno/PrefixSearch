@@ -60,7 +60,7 @@ if __name__ == "__main__":
         p = url.split("/")
         trie.insert(p[1:])
     print "Prefix tree:"
-    print trie.__str__()
+    print trie
     
     print "Minimal prefixes:"
     for prefix in trie.findMinimal(3):
